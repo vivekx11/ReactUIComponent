@@ -31,7 +31,7 @@ function App() {
   const cursorDotRef = useRef(null);
   const containerRef = useRef(null);
   
-  // Interactive experience section state
+  // Interactive experience section state.
   const [activeExp, setActiveExp] = useState(0);
 
   const toggleTheme = () => {
