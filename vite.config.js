@@ -14,6 +14,7 @@ export default defineConfig({
       },
     },
     // We'll keep it simple for now to ensure build stability
+    // to simple
     rollupOptions: {
       output: {
         manualChunks: undefined, // Rollback to default automatic splitting
