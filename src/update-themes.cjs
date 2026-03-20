@@ -1,4 +1,8 @@
-:root {
+const fs = require('fs');
+const path = require('path');
+
+const indexCssPath = 'c:\\Users\\Vivek\\OneDrive\\Desktop\\DOCS\\parallex\\r\\portfolio\\src\\index.css';
+const newIndexCss = `:root {
   /* Common Variables */
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -37,39 +41,36 @@
 }
 
 [data-theme="light"] {
-  --accent-primary: #4f46e5;
-  --accent-secondary: #7c3aed;
-  --accent-primary-rgb: 79, 70, 229;
+  --accent-primary: #0284c7;
+  --accent-secondary: #4f46e5;
+  --accent-primary-rgb: 2, 132, 199;
   
-  /* Distinct Grey and White Shades (Similar depth to Dark Mode) */
-  --bg-primary: #e2e8f0; /* Noticeable grey background */
-  --bg-secondary: #cbd5e1; /* Deeper grey for secondary elements */
-  --card-bg: rgba(255, 255, 255, 0.65); /* Glassy white card on grey */
-  --glass-bg: rgba(226, 232, 240, 0.9); /* Frosty grey */
-  --glass-panel: rgba(255, 255, 255, 0.8); /* Stronger white panel on grey */
+  --bg-primary: #fcfcfd;
+  --bg-secondary: #f1f5f9;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --glass-bg: rgba(252, 252, 253, 0.8);
+  --glass-panel: rgba(255, 255, 255, 0.95);
   
-  --border-color: rgba(15, 23, 42, 0.12);
-  --border-glow: rgba(79, 70, 229, 0.2);
-  --border-hover: rgba(79, 70, 229, 0.4);
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-glow: rgba(2, 132, 199, 0.15);
+  --border-hover: rgba(2, 132, 199, 0.3);
   
-  --text-primary: #0f172a; 
-  --text-secondary: #334155;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
   
-  --nav-bg: rgba(226, 232, 240, 0.7);
-  --nav-border: rgba(15, 23, 42, 0.1);
+  --nav-bg: rgba(252, 252, 253, 0.85);
+  --nav-border: rgba(15, 23, 42, 0.06);
 
-  --btn-hover-bg: #111827;
+  --btn-hover-bg: #0f172a;
   --btn-hover-text: #ffffff;
 
-  --noise-opacity: 0.012;
-  --image-overlay: rgba(255, 255, 255, 0.6);
-  --bottom-section-bg: #f8f9fa;
+  --noise-opacity: 0.015;
+  --image-overlay: rgba(252, 252, 253, 0.7);
+  --bottom-section-bg: rgba(15, 23, 42, 0.02);
 
-  --glow-1: rgba(79, 70, 229, 0.08);
-  --glow-2: rgba(124, 58, 237, 0.08);
-  
-  /* Proper elevated shadows for white cards against off-white context */
-  --panel-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --glow-1: rgba(2, 132, 199, 0.05);
+  --glow-2: rgba(79, 70, 229, 0.05);
+  --panel-shadow: 0 8px 32px rgba(2, 132, 199, 0.05);
 }
 
 * {
@@ -203,49 +204,37 @@ a {
 
 .glass-panel {
   background: var(--glass-panel);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: var(--panel-shadow);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s ease;
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 40px var(--border-glow);
+  box-shadow: 0 0 30px var(--border-glow);
   border-color: var(--border-hover);
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-2px);
 }
+`;
 
-/* Premium Button Shine Effect */
-.btn-shine {
-  position: relative;
-  overflow: hidden;
-}
+fs.writeFileSync(indexCssPath, newIndexCss);
 
-.btn-shine::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 45%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.1) 55%,
-    transparent 100%
-  );
-  transform: rotate(45deg);
-  transition: all 0.6s ease;
-  pointer-events: none;
-  opacity: 0;
-}
+const appCssPath = 'c:\\Users\\Vivek\\OneDrive\\Desktop\\DOCS\\parallex\\r\\portfolio\\src\\App.css';
+let appCss = fs.readFileSync(appCssPath, 'utf8');
 
-.btn-shine:hover::after {
-  opacity: 1;
-  top: -20%;
-  left: -20%;
-}
+// Replace hardcoded Gold
+appCss = appCss.replace(/rgba\(255,\s*215,\s*0,\s*([0-9.]+)\)/g, 'rgba(var(--accent-primary-rgb), $1)');
+appCss = appCss.replace(/#FFD700/gi, 'var(--accent-primary)');
+
+// Replace hardcoded Secondary Gold
+appCss = appCss.replace(/rgba\(255,\s*140,\s*0,\s*([0-9.]+)\)/g, 'rgba(var(--accent-primary-rgb), $1)');
+appCss = appCss.replace(/#FF8C00/gi, 'var(--accent-secondary)');
+
+// Replace hardcoded Purple
+appCss = appCss.replace(/rgba\(124,\s*58,\s*237,\s*([0-9.]+)\)/g, 'rgba(var(--accent-primary-rgb), $1)');
+appCss = appCss.replace(/#7c3aed/gi, 'var(--accent-primary)');
+appCss = appCss.replace(/#a855f7/gi, 'var(--accent-secondary)');
+
+console.log('Successfully applied new modern themes to App.css and index.css.');

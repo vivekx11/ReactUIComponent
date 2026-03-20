@@ -42,14 +42,40 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import { 
+  SiAstro, SiSvelte, SiNextdotjs, SiTypescript, SiTailwindcss,
+  SiReact, SiVuedotjs, SiHtml5, SiJavascript,
+  SiNodedotjs, SiPython, SiFastapi, SiNestjs, SiGraphql, SiMongodb,
+  SiOpenai, SiGit, SiVercel, SiAnthropic, SiGooglegemini
+} from "react-icons/si";
+import { FaCss3Alt } from "react-icons/fa";
+import { VscVscode } from "react-icons/vsc";
 import './App.css';
-
 gsap.registerPlugin(ScrollTrigger);
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
 
 function App() {
   const [theme, setTheme] = useState('dark');
   const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Game State
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
   
   const cursorRef = useRef(null);
   const cursorDotRef = useRef(null);
@@ -62,6 +88,19 @@ function App() {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
+  const handleTicTacClick = (index) => {
+    if (board[index] || calculateWinner(board)) return;
+    const newBoard = [...board];
+    newBoard[index] = xIsNext ? 'X' : 'O';
+    setBoard(newBoard);
+    setXIsNext(!xIsNext);
+  };
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setXIsNext(true);
   };
 
   const experiences = [
@@ -196,51 +235,47 @@ function App() {
 
   const skillCategories = [
     {
+      name: "Featured",
+      skills: [
+        { name: "Astro", icon: <SiAstro size={16} /> },
+        { name: "SvelteKit", icon: <SiSvelte size={16} /> },
+        { name: "Next.js", icon: <SiNextdotjs size={16} /> },
+        { name: "TypeScript", icon: <SiTypescript size={16} /> },
+        { name: "Tailwind CSS", icon: <SiTailwindcss size={16} /> }
+      ]
+    },
+    {
       name: "Frontend",
-      icon: <Monitor size={22} />,
       skills: [
-        { name: "React", level: 90 },
-        { name: "TypeScript", level: 82 },
-        { name: "JavaScript", level: 95 },
-        { name: "HTML/CSS", level: 95 },
-        { name: "Tailwind CSS", level: 88 },
-        { name: "GSAP", level: 75 }
+        { name: "React", icon: <SiReact size={16} /> },
+        { name: "Vue", icon: <SiVuedotjs size={16} /> },
+        { name: "Svelte", icon: <SiSvelte size={16} /> },
+        { name: "HTML", icon: <SiHtml5 size={16} /> },
+        { name: "CSS", icon: <FaCss3Alt size={16} /> },
+        { name: "JavaScript", icon: <SiJavascript size={16} /> }
       ]
     },
     {
-      name: "Backend",
-      icon: <Database size={22} />,
+      name: "Backend & APIs",
       skills: [
-        { name: "Node.js", level: 88 },
-        { name: "Python", level: 78 },
-        { name: "FastAPI", level: 70 },
-        { name: "Java", level: 72 },
-        { name: "MongoDB", level: 80 },
-        { name: "REST APIs", level: 90 }
+        { name: "Node.js", icon: <SiNodedotjs size={16} /> },
+        { name: "Python", icon: <SiPython size={16} /> },
+        { name: "FastAPI", icon: <SiFastapi size={16} /> },
+        { name: "NestJS", icon: <SiNestjs size={16} /> },
+        { name: "GraphQL", icon: <SiGraphql size={16} /> },
+        { name: "MongoDB", icon: <SiMongodb size={16} /> }
       ]
     },
     {
-      name: "Mobile & Tools",
-      icon: <Smartphone size={22} />,
+      name: "AI & Dev Tools",
       skills: [
-        { name: "Flutter", level: 82 },
-        { name: "Dart", level: 78 },
-        { name: "Git/GitHub", level: 90 },
-        { name: "VS Code", level: 95 },
-        { name: "Docker", level: 65 },
-        { name: "Firebase", level: 80 }
-      ]
-    },
-    {
-      name: "AI & Emerging",
-      icon: <Cpu size={22} />,
-      skills: [
-        { name: "Claude", level: 85 },
-        { name: "Prompt Engineering", level: 88 },
-        { name: "Perplexity", level: 80 },
-        { name: "AI Integration", level: 75 },
-        { name: "Web3 Basics", level: 55 },
-        { name: "PWA", level: 70 }
+        { name: "Claude Code", icon: <SiAnthropic size={16} /> },
+        { name: "Gemini", icon: <SiGooglegemini size={16} /> },
+        { name: "Perplexity", icon: <Sparkles size={16} /> },
+        { name: "OpenAI", icon: <SiOpenai size={16} /> },
+        { name: "VS Code", icon: <VscVscode size={16} /> },
+        { name: "Git", icon: <SiGit size={16} /> },
+        { name: "Vercel", icon: <SiVercel size={16} /> }
       ]
     }
   ];
@@ -525,9 +560,9 @@ function App() {
                   </div>
 
                   <div className="hero-buttons mt-6" style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
-                    <a href="#projects" className="btn-link">View Projects &rarr;</a>
-                    <a href="#contact" className="btn-link" style={{borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', background: 'transparent'}}>Hire Me &rarr;</a>
-                    <a href="resume.pdf" className="btn-link"><Download size={16} /> Resume</a>
+                    <a href="#projects" className="btn-link btn-shine">View Projects &rarr;</a>
+                    <a href="#contact" className="btn-link btn-shine" style={{borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', background: 'transparent'}}>Hire Me &rarr;</a>
+                    <a href="resume.pdf" className="btn-link btn-shine"><Download size={16} /> Resume</a>
                   </div>
                 </div>
 
@@ -737,27 +772,15 @@ function App() {
                 </p>
               </div>
               
-              <div className="skills-advanced-grid scroll-fade-up">
+              <div className="skills-minimal-container scroll-fade-up">
                 {skillCategories.map((cat, idx) => (
-                  <div key={idx} className="skill-card glass-panel">
-                    <div className="skill-card-header">
-                      <div className="skill-card-icon">{cat.icon}</div>
-                      <h3 className="skill-card-name">{cat.name}</h3>
-                    </div>
-                    <div className="skill-bars-list">
+                  <div key={idx} className="skill-minimal-category">
+                    <h3 className="skill-category-title">{cat.name}</h3>
+                    <div className="skill-pills-wrapper">
                       {cat.skills.map((skill, i) => (
-                        <div key={i} className="skill-bar-item">
-                          <div className="skill-bar-meta">
-                            <span className="skill-bar-label">{skill.name}</span>
-                            <span className="skill-bar-percent">{skill.level}%</span>
-                          </div>
-                          <div className="skill-bar-track">
-                            <div 
-                              className="skill-bar-fill" 
-                              data-width={`${skill.level}%`}
-                              style={{width: 0}}
-                            ></div>
-                          </div>
+                        <div key={i} className="skill-pill">
+                          <span className="skill-pill-icon">{skill.icon}</span>
+                          <span className="skill-pill-name">{skill.name}</span>
                         </div>
                       ))}
                     </div>
@@ -911,33 +934,50 @@ function App() {
                   </form>
                 </div>
                 
-                {/* Right: Inspirational Quote 50% */}
-                <div className="contact-quote-side">
-                  <div className="quote-card">
-                    <Quote size={56} className="quote-icon" />
-                    <blockquote className="featured-quote">
-                      "The best way to predict the future is to invent it."
-                    </blockquote>
-                    <p className="quote-author">— Alan Kay</p>
-                    <p className="quote-subtitle">Computer Scientist & Pioneer</p>
-                    <div className="quote-decoration">
-                      <div className="quote-line"></div>
-                      <Sparkles size={20} className="text-accent" />
-                      <div className="quote-line"></div>
+                {/* Right: Fun Game & Info */}
+                <div className="contact-quote-side" style={{display: 'flex', flexDirection: 'column', gap: '2rem', flex: 1}}>
+                  <div className="quote-card game-card-container">
+                    <div style={{display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem'}}>
+                      <Gamepad2 size={24} className="text-accent" />
+                      <h3 className="text-primary" style={{fontSize: '1.4rem', fontWeight: 700}}>Let's play a game!</h3>
                     </div>
-                    <p className="quote-message">
-                      Let's invent something remarkable together. Whether it's a bold startup idea or a refined product feature — great things start with a conversation.
-                    </p>
-                    <div className="contact-info-mini">
-                      <div className="contact-info-item">
-                        <Mail size={16} className="text-accent" />
-                        <span>viveksawji@gmail.com</span>
-                      </div>
-                      <div className="contact-info-item">
-                        <MapPin size={16} className="text-accent" />
-                        <span>Mumbai, India</span>
-                      </div>
+                    <p className="text-secondary mb-6" style={{fontSize: '0.95rem'}}>Take a quick Tic-Tac-Toe break before you hit send.</p>
+                    
+                    <div className="tic-tac-board">
+                      {board.map((cell, i) => (
+                        <button key={i} className={`tic-tac-cell ${cell === 'X' ? 'cell-x' : cell === 'O' ? 'cell-o' : ''} ${!cell && !calculateWinner(board) ? 'interactive' : ''}`} onClick={() => handleTicTacClick(i)}>
+                          {cell}
+                        </button>
+                      ))}
                     </div>
+                    
+                    <div className="game-status mt-6" style={{textAlign: 'center', fontWeight: 'bold'}}>
+                      {calculateWinner(board) 
+                        ? <span className="text-accent" style={{fontSize: '1.1rem'}}>Winner: {calculateWinner(board)}! 🎉</span> 
+                        : board.every(c => c !== null) 
+                          ? <span className="text-secondary" style={{fontSize: '1.1rem'}}>It's a draw! 🤝</span>
+                          : <span className="text-secondary">Next player: <span className="text-primary">{xIsNext ? 'X' : 'O'}</span></span>
+                      }
+                    </div>
+                    
+                    <button className="btn-link mt-4" style={{width: '100%', justifyContent: 'center'}} onClick={(e) => { e.preventDefault(); resetGame(); }}>
+                      Reset Game
+                    </button>
+                  </div>
+                  
+                  <div className="contact-info-mini glass-panel" style={{padding: '2rem', borderRadius: '16px'}}>
+                      <div className="contact-info-item mb-4" style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                        <div style={{width: '40px', height: '40px', borderRadius: '50%', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                          <Mail size={18} className="text-accent" />
+                        </div>
+                        <span className="text-primary" style={{fontWeight: 500}}>viveksawji@gmail.com</span>
+                      </div>
+                      <div className="contact-info-item" style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                         <div style={{width: '40px', height: '40px', borderRadius: '50%', background: 'var(--card-bg)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                          <MapPin size={18} className="text-accent" />
+                        </div>
+                        <span className="text-primary" style={{fontWeight: 500}}>Mumbai, Maharashtra, India</span>
+                      </div>
                   </div>
                 </div>
               </div>
